@@ -1,0 +1,50 @@
+---
+# tasks file for for_ubuntu
+
+- name: Create group
+  group:
+    name: newgroup
+    state: present
+
+- name: Create first user
+  user:
+    name: Hannah
+    password: "{{ first_user_psw }}"
+    state: present
+    groups:
+      - users
+      - newgroup
+
+- name: Create second user
+  user:
+    name: Sem
+    password: "{{ second_user_psw }}"
+    state: present
+    groups:
+      - users
+      - newgroup
+
+- name: Create empty file for Hannah
+  file: 
+    path: /home/Hannah/some_file.txt
+    state: touch
+    owner: Hannah
+
+- name: Create not-empty file for Sem
+  copy:
+    dest: /home/Sem/file.txt
+    content: |
+      "There can be any sentence or text here"
+
+- name:  Generate ssh keypair in ubuntu machine
+  openssh_keypair:
+    path: /tmp/id_ed25519
+    type: ed25519
+
+- name: Fetch ssh public key from remote to local
+  fetch:
+    src: /tmp/{{ item }}
+    dest: ~/fetched
+  loop:
+      - id_ed25519
+      - id_ed25519.pub

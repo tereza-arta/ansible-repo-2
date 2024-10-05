@@ -1,0 +1,10 @@
+---
+- hosts: ubuntu_srv
+  become: true
+  roles:
+    - role: for_ubuntu
+
+- hosts: amazon_lin_srv
+  become: true
+  roles:
+    - role: for_amazon_linux
